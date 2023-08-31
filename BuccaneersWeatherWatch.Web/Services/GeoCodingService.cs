@@ -7,17 +7,17 @@ namespace BuccaneersWeatherWatch.Web.Services
     public class GeoCodingService
     {
         private readonly HttpClient _httpClient;
-        private readonly AppSettings _appSettings;
+        private readonly GeoCodingInfo _geoCodingInfo;
 
         public GeoCodingService(HttpClient httpClient, AppSettings appSettings)
         {
             _httpClient = httpClient;
-            _appSettings = appSettings;
+            _geoCodingInfo = appSettings.GetGeoCodingInfo();
         }
 
         public async Task<List<GeoCodingLocationData>> GetGeoCodingDataAsync(string searchString)
         {
-            string apiUrl = $"{_appSettings.GetGeoCodingInfo().GeoLocationApi}search?key={_appSettings.GetGeoCodingInfo().GeoLocationApiKey}&q={searchString}&format=json";
+            string apiUrl = $"{_geoCodingInfo.GeoLocationApi}search?key={_geoCodingInfo.GeoLocationApiKey}&q={searchString}&format=json";
             HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
 
             if (response.IsSuccessStatusCode)
@@ -26,7 +26,7 @@ namespace BuccaneersWeatherWatch.Web.Services
             }
             else
             {
-                throw new HttpRequestException($"Error: {response.StatusCode}");
+                return new List<GeoCodingLocationData>();
             }
         }
     }
