@@ -1,52 +1,48 @@
 ﻿@page "/"
-@inject HttpClient Http
+@inject WeatherService WeatherService
+@inject GeoCodingService GeoCodingService
+@using BuccaneersWeatherWatch.Web.Models;
+@using BuccaneersWeatherWatch.Web.Services;
 @using BuccaneersWeatherWatch.Web.Shared
 
-<PageTitle>Weather forecast</PageTitle>
+<PageTitle>Home</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true">Weather forecast</MudText>
-<MudText Class="mb-8">This component demonstrates fetching data from the server.</MudText>
-@if (forecasts == null)
-{
-    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
-}
-else
-{
-    <MudTable Items="forecasts" Hover="true" SortLabel="Sort By" Elevation="0">
-        <HeaderContent>
-            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<WeatherForecast, object>(x=>x.Date)">Date</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<WeatherForecast, object>(x=>x.TemperatureC)">Temp. (C)</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<WeatherForecast, object>(x=>x.TemperatureF)">Temp. (F)</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<WeatherForecast, object>(x=>x.Summary!)">Summary</MudTableSortLabel></MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Date">@context.Date</MudTd>
-            <MudTd DataLabel="Temp. (C)">@context.TemperatureC</MudTd>
-            <MudTd DataLabel="Temp. (F)">@context.TemperatureF</MudTd>
-            <MudTd DataLabel="Summary">@context.Summary</MudTd>
-        </RowTemplate>
-        <PagerContent>
-            <MudTablePager PageSizeOptions="new int[]{50, 100}" />
-        </PagerContent>
-    </MudTable>
-}
 
+<MudText Typo="Typo.h4">Weather forecast</MudText>
+<MudButton OnClick="WeatherCall">Get Winnipeg Weather</MudButton>
+
+@if(_weatherData != null && _geoCodingData != null && _geoCodingData.Count > 0)
+{
+    @foreach (var location in _geoCodingData)
+    {
+        <MudText>@location.Display_name</MudText>
+    }
+
+    <MudDivider />
+
+    <MudText>Longitude: @_weatherData.Longitude</MudText>
+    <MudText>Latitude: @_weatherData.Latitude</MudText>
+    <MudText>Timezone: @_weatherData.Timezone</MudText>
+}
 
 @code {
-    private WeatherForecast[]? forecasts;
+    private string? _searchString;
 
-    protected override async Task OnInitializedAsync()
+    private WeatherData? _weatherData;
+    private List<GeoCodingLocationData>? _geoCodingData;
+
+    public async Task WeatherCall()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
-    }
-    public class WeatherForecast
-    {
-        public DateTime Date { get; set; }
+        _geoCodingData = await GeoCodingService.GetGeoCodingDataAsync("winnipeg manitoba".ToLower());
 
-        public int TemperatureC { get; set; }
+        var firstSelection = _geoCodingData.FirstOrDefault()!;
 
-        public string? Summary { get; set; }
+        var latitude = double.Parse(firstSelection.Lat);
+        var longitude = double.Parse(firstSelection.Lon);
+        
 
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        _weatherData = await WeatherService.GetWeatherDataAsync(latitude, longitude);
+
+        
     }
 }
