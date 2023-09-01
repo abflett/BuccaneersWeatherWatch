@@ -1,0 +1,57 @@
+﻿@using BuccaneersWeatherWatch.Web.Extensions;
+@using BuccaneersWeatherWatch.Web.Models;
+@using BuccaneersWeatherWatch.Web.Utils;
+
+@if (WeatherData != null)
+{
+    <MudItem xs="12">
+        <MudPaper Elevation="5" Class="pa-5">
+            <MudGrid>
+                <MudItem xs="6" sm="6" md="4" lg="3">
+                    <MudText>@(TimeConversion.UnixToLocalTime(WeatherData.Currently.Time))</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="6" md="4" lg="3">
+                    <MudText>@WeatherData.Currently.Summary - @WeatherData.Currently.PrecipType.CapitalizeFirstLetter()</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="6" md="4" lg="3">
+                    <MudText>Temperature: @WeatherData.Currently.Temperature °C</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="6" md="4" lg="3">
+                    <MudText>Feels Like: @WeatherData.Currently.ApparentTemperature °C</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="6" md="4" lg="3">
+                    <MudText>@WindBearing.GetDirectionFromDegree(WeatherData.Currently.WindBearing) @WeatherData.Currently.WindSpeed - @(WeatherData.Currently.WindGust)km/h</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="6" md="4" lg="3">
+                    <MudText>Humidity: @(WeatherData.Currently.Humidity * 100)%</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="6" md="4" lg="3">
+                    <MudText>Cloud Cover: @(WeatherData.Currently.CloudCover * 100)%</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="6" md="4" lg="3">
+                    <MudText>Visibility: @WeatherData.Currently.Visibility km/h</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="6" md="4" lg="3">
+                    <MudText>Dew Point: @WeatherData.Currently.DewPoint °C</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="6" md="4" lg="3">
+                    <MudText>Pressure: @WeatherData.Currently.Pressure hPa</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="6" md="4" lg="3">
+                    <MudText>Ozone: @WeatherData.Currently.Ozone DU</MudText>
+                </MudItem>
+                <MudItem xs="6" sm="6" md="4" lg="3">
+                    <MudText>Uv Index: @WeatherData.Currently.UvIndex</MudText>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </MudItem>
+
+    <DailyComponent DailyData="@WeatherData.Daily.Data" />
+}
+
+
+@code {
+    [Parameter]
+    public WeatherData? WeatherData { get; set; }
+}

@@ -10,10 +10,6 @@
 
 <MudGrid>
     <MudItem xs="12">
-        <MudText Typo="Typo.h4">Weather forecast</MudText>
-    </MudItem>
-
-    <MudItem xs="12">
         <EditForm Model="@_search" OnSubmit="SearchForWeatherForcast">
             <MudGrid>
                 <MudItem xs="10">
@@ -43,7 +39,6 @@
         <MudItem xs="12">
             <MudText>Loading results...</MudText>
         </MudItem>
-
     }
 
     @if (_isNoResults)
@@ -56,130 +51,14 @@
 
     @if (_weatherData != null && !_isLoading)
     {
-        <MudItem xs="12">
-            <MudPaper Elevation="5" Class="pa-5">
-                <MudGrid>
-                    <MudItem xs="12">
-                        <MudDivider />
-                    </MudItem>
-
-                    <MudItem xs="12">
-                        <MudText>WeatherData</MudText>
-                    </MudItem>
-
-                    @* ******************************************************************************************************************************************** *@
-
-                    <MudItem xs="12">
-                        <MudDivider />
-                    </MudItem>
-
-                    <MudItem xs="12">
-                        <MudText>Longitude: @_weatherData.Longitude</MudText>
-                    </MudItem>
-
-                    <MudItem xs="12">
-                        <MudText>Latitude: @_weatherData.Latitude</MudText>
-                    </MudItem>
-
-                    <MudItem xs="12">
-                        <MudText>Timezone: @_weatherData.Timezone</MudText>
-                    </MudItem>
-
-                    <MudItem xs="12">
-                        <MudText>Offset: @_weatherData.Offset</MudText>
-                    </MudItem>
-
-                    <MudItem xs="12">
-                        <MudText>Elevation: @_weatherData.Elevation</MudText>
-                    </MudItem>
-
-                    <MudItem xs="12">
-                        <MudDivider />
-                    </MudItem>
-
-                    <MudItem xs="12">
-                        <MudText>Currently</MudText>
-                    </MudItem>
-
-                    @* ******************************************************************************************************************************************** *@
-
-                    <MudItem xs="12">
-                        <MudDivider />
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>Time: @_weatherData.Currently.Time</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>Summary: @_weatherData.Currently.Summary</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>Icon: @_weatherData.Currently.Icon</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>NearestStormDistance: @_weatherData.Currently.NearestStormDistance</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>NearestStormBearing: @_weatherData.Currently.NearestStormBearing</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>PrecipIntensity: @_weatherData.Currently.PrecipIntensity</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>PrecipProbability: @_weatherData.Currently.PrecipProbability</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>PrecipIntensityError: @_weatherData.Currently.PrecipIntensityError</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>PrecipType: @_weatherData.Currently.PrecipType</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>Temperature: @_weatherData.Currently.Temperature</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>ApparentTemperature: @_weatherData.Currently.ApparentTemperature</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>DewPoint: @_weatherData.Currently.DewPoint</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>Humidity: @_weatherData.Currently.Humidity</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>Pressure: @_weatherData.Currently.Pressure</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>WindSpeed: @_weatherData.Currently.WindSpeed</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>WindGust: @_weatherData.Currently.WindGust</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>WindBearing: @_weatherData.Currently.WindBearing</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>CloudCover: @_weatherData.Currently.CloudCover</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>UvIndex: @_weatherData.Currently.UvIndex</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>Visibility: @_weatherData.Currently.Visibility</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>Ozone: @_weatherData.Currently.Ozone</MudText>
-                    </MudItem>
-                    <MudItem xs="12">
-                        <MudText>Time: @TimeConversion.UnixToLocalTime(_weatherData.Currently.Time)</MudText>
-                    </MudItem>
-                </MudGrid>
-            </MudPaper>
-        </MudItem>
+        <BuccaneersWeatherWatch.Web.Components.CurrentComponent WeatherData="@_weatherData" />
+        
     }
 
 </MudGrid>
 
 @code {
+    private string _testString = "Testing 123";
     private Search _search = new Search();
     private WeatherData? _weatherData;
     private List<GeoCodingLocationData>? _geoCodingData;
@@ -224,8 +103,8 @@
     {
         try
         {
-            _isNoResults = false;
             _weatherData = await WeatherService.GetWeatherDataAsync(_selectedGeoCodingLocation!.Lat, _selectedGeoCodingLocation!.Lon);
+            _isNoResults = false;
             _isLoading = false;
         }
         catch (Exception)

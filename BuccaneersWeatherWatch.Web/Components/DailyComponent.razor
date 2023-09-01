@@ -1,0 +1,53 @@
+﻿@using BuccaneersWeatherWatch.Web.Extensions;
+@using BuccaneersWeatherWatch.Web.Models;
+@using BuccaneersWeatherWatch.Web.Utils;
+
+@if (DailyData != null)
+{
+    <MudItem xs="12">
+        <MudGrid>
+            @foreach (var dailyData in DailyData.Skip(1))
+            {
+                <MudItem xs="6" sm="4" md="3" lg="3" xl="2">
+                    <MudPaper Elevation="5" Class="pa-2">
+                        <MudGrid>
+                            <MudItem xs="12">
+                                <MudText>@(TimeConversion.UnixToLocalTime(dailyData.Time).ToString("M/d/yyyy"))</MudText>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudText>@(dailyData.TemperatureHigh) - @(dailyData.TemperatureLow)°C</MudText>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudText>@dailyData.Summary - @dailyData.PrecipType.CapitalizeFirstLetter()</MudText>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudText>@WindBearing.GetDirectionFromDegree(dailyData.WindBearing) @dailyData.WindSpeed - @(dailyData.WindGust)km/h </MudText>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudText>Cloud: @(Math.Ceiling(dailyData.CloudCover * 100))%</MudText>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudText>Vis: @(dailyData.Visibility)km/h</MudText>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudText>Dew Point: @(dailyData.DewPoint)°C</MudText>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudText>Humidity: @(Math.Ceiling(dailyData.Humidity * 100))%</MudText>
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudText>@(dailyData.Pressure)hPa</MudText>
+                            </MudItem>
+                        </MudGrid>
+                    </MudPaper>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudItem>
+}
+
+
+@code {
+    [Parameter]
+    public List<DataDaily>? DailyData { get; set; }
+}
