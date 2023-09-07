@@ -1,0 +1,90 @@
+﻿@using BuccaneersWeatherWatch.Web.Extensions;
+@using BuccaneersWeatherWatch.Web.Models;
+@using BuccaneersWeatherWatch.Web.Utils;
+
+
+<MudItem xs="12">
+    <MudPaper Elevation="5">
+        <MudContainer Class="pt-4">
+            <MudButtonGroup Color="Color.Primary" Size="Size.Medium" Variant="Variant.Filled">
+                <MudButton OnClick="LoadTemperature">Temperature °C</MudButton>
+                <MudButton OnClick="LoadWind">Wind km/h</MudButton>
+                <MudButton OnClick="LoadPrecipitation">Precipitation</MudButton>
+            </MudButtonGroup>
+            <br /> 
+            <MudChart ChartType="ChartType.Line" ChartSeries="_series" ChartOptions="_options" XAxisLabels="_xAxisLabels" Width="100%"></MudChart>
+
+        </MudContainer>
+    </MudPaper>
+</MudItem>
+
+@code {
+    [Parameter]
+    public List<DataDaily>? DailyData { get; set; }
+
+    private ChartOptions _options = new ChartOptions();
+    private List<ChartSeries> _series = new List<ChartSeries>();
+    private string[] _xAxisLabels = Array.Empty<string>();
+
+    protected override void OnInitialized()
+    {
+        _options.YAxisTicks = 1; // spacing of ticks
+        _options.MaxNumYAxisTicks = 10;
+        _options.InterpolationOption = InterpolationOption.Periodic;
+        _options.YAxisFormat = "N0";
+        _options.YAxisLines = true;
+
+        LoadTemperature();
+    }
+
+    private void LoadWind()
+    {
+        if (DailyData != null)
+        {
+            double[] windSpeed = DailyData.Select(x => x.WindSpeed).ToArray();
+            double[] windGust = DailyData.Select(x => x.WindGust).ToArray();
+
+            _series = new();
+            _series.Add(new ChartSeries() { Name = "Wind Speed", Data = windSpeed });
+            _series.Add(new ChartSeries() { Name = "Wind Gust", Data = windGust });
+
+            _xAxisLabels = DailyData.Select(x => $"{TimeConversion.UnixToLocalTime(x.Time).DayOfWeek.ToString().Substring(0, 3)} ({WindBearing.GetDirectionFromDegree(x.WindBearing)})").ToArray();
+        }
+    }
+
+    private void LoadPrecipitation()
+    {
+        if (DailyData != null)
+        {
+            double[] cloudCover = DailyData.Select(x => x.CloudCover * 100).ToArray();
+            double[] humidity = DailyData.Select(x => x.Humidity * 100).ToArray();
+
+            _series = new();
+            _series.Add(new ChartSeries() { Name = "Humidity", Data = humidity });
+            _series.Add(new ChartSeries() { Name = "Cloud Cover", Data = cloudCover });
+
+            _xAxisLabels = DailyData.Select(x => $"{TimeConversion.UnixToLocalTime(x.Time).DayOfWeek.ToString().Substring(0, 3)} ({@x.PrecipType.CapitalizeFirstLetter()})").ToArray();
+        }
+    }
+
+    private void LoadTemperature()
+    {
+        if (DailyData != null)
+        {
+            double[] temperatureHigh = DailyData.Select(x => x.TemperatureHigh).ToArray();
+            double[] temperatureLow = DailyData.Select(x => x.TemperatureLow).ToArray();
+            double[] feelTemperatureHigh = DailyData.Select(x => x.ApparentTemperatureHigh).ToArray();
+            double[] feelTemperatureLow = DailyData.Select(x => x.ApparentTemperatureMin).ToArray();
+            double[] dewPoint = DailyData.Select(x => x.DewPoint).ToArray();
+
+            _series = new();
+            _series.Add(new ChartSeries() { Name = "High", Data = temperatureHigh });
+            _series.Add(new ChartSeries() { Name = "Low", Data = temperatureLow });
+            _series.Add(new ChartSeries() { Name = "FL High", Data = feelTemperatureHigh });
+            _series.Add(new ChartSeries() { Name = "FL Low", Data = feelTemperatureLow });
+            _series.Add(new ChartSeries() { Name = "Dew P.", Data = dewPoint });
+
+            _xAxisLabels = DailyData.Select(x => TimeConversion.UnixToLocalTime(x.Time).DayOfWeek.ToString().Substring(0, 3)).ToArray();
+        }
+    }
+}

@@ -1,6 +1,7 @@
 ﻿@page "/"
 @inject WeatherService WeatherService
 @inject GeoCodingService GeoCodingService
+@using BuccaneersWeatherWatch.Web.Components
 @using BuccaneersWeatherWatch.Web.Models;
 @using BuccaneersWeatherWatch.Web.Services;
 @using BuccaneersWeatherWatch.Web.Shared
@@ -24,6 +25,8 @@
 
     @if (_geoCodingData != null && _geoCodingData.Count > 0 && !_isLoading && !_isNoResults)
     {
+
+
         <MudItem xs="12">
             <MudSelect T="GeoCodingLocationData" Label="Currently Selected" Immediate="true" Value="_selectedGeoCodingLocation" ValueChanged="ChangeSelected">
                 @foreach (GeoCodingLocationData location in _geoCodingData)
@@ -49,10 +52,12 @@
 
     }
 
+    
+
     @if (_weatherData != null && !_isLoading)
     {
-        <BuccaneersWeatherWatch.Web.Components.CurrentComponent WeatherData="@_weatherData" />
-        
+        <CurrentComponent WeatherData="@_weatherData" />
+        <TemperatureDailyChart DailyData="_weatherData.Daily.Data" />
     }
 
 </MudGrid>
