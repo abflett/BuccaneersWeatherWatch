@@ -9,10 +9,15 @@
             <MudButtonGroup Color="Color.Primary" Size="Size.Medium" Variant="Variant.Filled">
                 <MudButton OnClick="LoadTemperature">Temperature °C</MudButton>
                 <MudButton OnClick="LoadWind">Wind km/h</MudButton>
-                <MudButton OnClick="LoadPrecipitation">Precipitation</MudButton>
+                <MudButton OnClick="LoadPrecipitation">Precipitation %</MudButton>
             </MudButtonGroup>
 
-            <MudChart ChartType="ChartType.Line" ChartSeries="_series" ChartOptions="_options" XAxisLabels="_xAxisLabels" Width="100%"></MudChart>
+            <MudChart
+                ChartType="ChartType.Line"
+                ChartSeries="_series"
+                ChartOptions="_options"
+                XAxisLabels="_xAxisLabels"
+                Width="100%" />
 
         </MudContainer>
     </MudPaper>
@@ -32,7 +37,7 @@
         _options.MaxNumYAxisTicks = 16;
         _options.InterpolationOption = InterpolationOption.Periodic;
         _options.YAxisFormat = "N0";
-        //_options.YAxisLines = true;
+        _options.YAxisLines = false;
         _options.LineStrokeWidth = 0.6;
 
         LoadTemperature();

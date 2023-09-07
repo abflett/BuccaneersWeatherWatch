@@ -1,3 +1,7 @@
+body {
+    background-color: #32333d;
+}
+
 .loading-progress {
     position: relative;
     display: block;
@@ -8,19 +12,20 @@
 
     .loading-progress circle {
         fill: none;
-        stroke: #e0e0e0;
+        stroke: #32333d;
         stroke-width: 0.6rem;
         transform-origin: 50% 50%;
         transform: rotate(-90deg);
     }
 
         .loading-progress circle:last-child {
-            stroke: #000;
+            stroke: #d1d1d1;
             stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
             transition: stroke-dasharray 0.05s ease-in-out;
         }
 
 .loading-progress-text {
+    color: #d1d1d1;
     position: absolute;
     text-align: center;
     font-weight: bold;
@@ -28,5 +33,6 @@
 }
 
     .loading-progress-text:after {
+        color: #d1d1d1;
         content: var(--blazor-load-percentage-text, "Loading");
     }
