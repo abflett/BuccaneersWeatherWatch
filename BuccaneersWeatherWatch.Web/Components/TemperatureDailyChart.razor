@@ -11,7 +11,7 @@
                 <MudButton OnClick="LoadWind">Wind km/h</MudButton>
                 <MudButton OnClick="LoadPrecipitation">Precipitation</MudButton>
             </MudButtonGroup>
-            <br /> 
+
             <MudChart ChartType="ChartType.Line" ChartSeries="_series" ChartOptions="_options" XAxisLabels="_xAxisLabels" Width="100%"></MudChart>
 
         </MudContainer>
@@ -28,11 +28,12 @@
 
     protected override void OnInitialized()
     {
-        _options.YAxisTicks = 1; // spacing of ticks
-        _options.MaxNumYAxisTicks = 10;
+        _options.YAxisTicks = 1;
+        _options.MaxNumYAxisTicks = 16;
         _options.InterpolationOption = InterpolationOption.Periodic;
         _options.YAxisFormat = "N0";
-        _options.YAxisLines = true;
+        //_options.YAxisLines = true;
+        _options.LineStrokeWidth = 0.6;
 
         LoadTemperature();
     }

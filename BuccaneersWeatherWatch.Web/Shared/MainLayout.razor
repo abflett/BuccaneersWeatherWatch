@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider IsDarkMode="_darkOn" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -8,6 +8,14 @@
     <MudAppBar Elevation="5">
         <MudText>Buccaneer's Weather Watch</MudText>
         <MudSpacer />
+        <MudToggleIconButton @bind-Toggled="_darkOn"
+                             Icon="@Icons.Material.Filled.DarkMode"
+                             Color="@Color.Inherit"
+                             Title="Off"
+                             ToggledIcon="@Icons.Material.Filled.LightMode"
+                             ToggledColor="@Color.Inherit"
+                             ToggledTitle="On" />
+
         <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Href="https://github.com/abflett/BuccaneersWeatherWatch" Target="_blank" />
     </MudAppBar>
     <MudMainContent>
@@ -18,5 +26,10 @@
 </MudLayout>
 
 @code {
+    private bool _darkOn = true;
 
+    public void OnToggledChanged(bool toggled)
+    {
+        _darkOn = toggled;
+    }
 }
