@@ -1,0 +1,44 @@
+﻿<MudIcon Icon="@_setIcon" Style="font-size: 4rem;" aria-label="@_setString" />
+
+@code {
+    [Parameter]
+    public string? PrecipitationType { get; set; }
+
+    private string _setString = "Unknown Precipitation";
+    private string _setIcon = Icons.Material.Filled.Warning;
+
+    protected override void OnInitialized()
+    {
+        if (PrecipitationType == "rain")
+        {
+            _setString = "It's Raining";
+            _setIcon = Icons.Material.Filled.WaterDrop;
+        }
+        else if (PrecipitationType == "none")
+        {
+            _setString = "No Precipitation";
+            _setIcon = Icons.Material.Filled.WbSunny;
+        }
+        else if (PrecipitationType == "snow")
+        {
+            _setString = "It's Snowing";
+            _setIcon = Icons.Material.Filled.SevereCold;
+        }
+        else if (PrecipitationType == "sleet")
+        {
+            _setString = "It's Sleeting";
+            _setIcon = Icons.Material.Filled.Grain;
+        }
+        else
+        {
+            // Handle other cases or provide a default icon and text
+            _setString = "Unknown Precipitation";
+            _setIcon = Icons.Material.Filled.Warning;
+        }
+    }
+
+    // Summery Cloudy, Fog, Clear
+
+    // Icons: clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day, partly-cloudy-night
+
+}

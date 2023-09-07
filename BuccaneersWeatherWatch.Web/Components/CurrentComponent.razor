@@ -11,7 +11,7 @@
                     <MudText>@(TimeConversion.UnixToLocalTime(WeatherData.Currently.Time))</MudText>
                 </MudItem>
                 <MudItem xs="6" sm="6" md="4" lg="3">
-                    <MudText>@WeatherData.Currently.Summary - @WeatherData.Currently.PrecipType.CapitalizeFirstLetter()</MudText>
+                    <PrecipitationIconComponent PrecipitationType="@WeatherData.Currently.PrecipType" />
                 </MudItem>
                 <MudItem xs="6" sm="6" md="4" lg="3">
                     <MudText>Temperature: @WeatherData.Currently.Temperature °C</MudText>
